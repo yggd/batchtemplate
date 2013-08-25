@@ -63,6 +63,9 @@ public abstract class ExecuteTemplate {
      * バッチの正常処理1サイクル分の流れを規定するメソッド。
      */
     public void execute() {
+        // TODO テンプレート化したことで流れが見づらくなった。
+        // 説明資料等が必要な気がする。
+
         if (!targetExist()) {
             // 対象ファイルが存在しない場合は終了
             return;
