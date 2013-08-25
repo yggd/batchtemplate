@@ -1,0 +1,10 @@
+エラー発生時のテストメールです。
+
+[$mail.errorCode:$mail.errorMessage]
+---
+
+====
+連絡先：XXX-XXXX
+XXXXXXXXXXXXXXXXXXX
+TEL:9999999999999
+mail:xxxxxxx@xxxxxxxxx.xxxx
