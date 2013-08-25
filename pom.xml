@@ -3,12 +3,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>xxx</groupId>
-  <artifactId>batch</artifactId>
+  <artifactId>batchtemplate</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>batch</name>
-  <url>http://maven.apache.org</url>
+  <name>batchtemplate</name>
+  <url>http://github.com/yggd/batchtemplate</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
