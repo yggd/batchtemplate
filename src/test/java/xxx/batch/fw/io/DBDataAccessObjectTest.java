@@ -1,10 +1,10 @@
-package xxx.batch.fw.dao;
+package xxx.batch.fw.io;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import xxx.batch.fw.dao.DBDataAccessObject;
+import xxx.batch.fw.io.DBDataAccessObject;
 
 public class DBDataAccessObjectTest {
 

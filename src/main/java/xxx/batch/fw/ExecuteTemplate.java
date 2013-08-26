@@ -1,12 +1,13 @@
 package xxx.batch.fw;
 
 import xxx.batch.fw.errorhandle.AbortException;
+import xxx.batch.fw.io.FileDataAccessObject;
 
 /**
  * バッチ処理一連の流れを表すテンプレートクラス。
  * 周期実行対象の1サイクルの処理を規定する。
  */
-public abstract class ExecuteTemplate {
+public abstract class ExecuteTemplate<T> {
 
     /**
      * 処理対象となるファイルが存在するかを判定するメソッド。
@@ -30,18 +31,18 @@ public abstract class ExecuteTemplate {
     public abstract ExecuteResult checkTarget();
 
     /**
-     * ファイルの内容調査(バリデーション)を行う。
+     * ファイルレコードの内容調査(バリデーション)を行う。
      * 
      * @return 対象ファイルのバリデーションが正常である場合、Status.NORMALが指定された処理結果を返す事。
      */
-    public abstract ExecuteResult validateTarget();
+    public abstract ExecuteResult validateTarget(T recordBean);
 
     /**
      * ファイルの内容を読み取り、DB登録を行う。
      * 
      * @return 処理結果
      */
-    public abstract ExecuteResult registerToDB();
+    public abstract ExecuteResult registerWithDB(T recordBean);
 
     /**
      * DB登録正常終了時、対象ファイルの削除を行う。
@@ -57,6 +58,13 @@ public abstract class ExecuteTemplate {
      * @param result 処理結果
      */
     public abstract void handleError(ExecuteResult result);
+
+    /**
+     * ファイルDAOオブジェクトを生成する。
+     * 
+     * @return ファイルDAOオブジェクト
+     */
+    public abstract FileDataAccessObject<T> createFileDAO();
 
     /**
      * バッチを実行する。
@@ -78,21 +86,26 @@ public abstract class ExecuteTemplate {
             return;
         }
 
-        // ファイルの内容チェックを行う。
-        result = validateTarget();
-        if (result == null || !Status.NORMAL.equals(result.getStatus())) {
-            handleError(result);
-            return;
-        }
+        FileDataAccessObject<T> fileDao = createFileDAO();
+        T recordBean = null;
+        while ((recordBean = fileDao.readNext())!= null) {
 
-        // DB登録を行う。
-        try {
-            result = registerToDB();
-        } catch (AbortException e) {
-            ExecuteResult abortResult =
+            // ファイルの内容チェックを行う。
+            result = validateTarget(recordBean);
+            if (result == null || !Status.NORMAL.equals(result.getStatus())) {
+                handleError(result);
+                return;
+            }
+
+            // DB登録を行う。
+            try {
+                result = registerWithDB(recordBean);
+            } catch (AbortException e) {
+                ExecuteResult abortResult =
                     new ExecuteResult(Status.ABORT_EXECUTE, e.getMessage());
-            handleError(abortResult);
-            return;
+                handleError(abortResult);
+                return;
+            }
         }
         
         // 対象ファイル削除を行う。

@@ -9,12 +9,14 @@ import xxx.batch.fw.ExecuteResult;
 import xxx.batch.fw.ExecuteTemplate;
 import xxx.batch.fw.Status;
 import xxx.batch.fw.errorhandle.FileMoveErrorHandler;
+import xxx.batch.fw.io.CsvRecordBean;
+import xxx.batch.fw.io.FileDataAccessObject;
 import xxx.batch.fw.util.PropertyUtil;
 
 /**
  * バッチ周期実行1サイクルの具体的な処理を実行する。
  */
-public class ExecuteTask extends ExecuteTemplate {
+public class ExecuteTask<CsvRecord> extends ExecuteTemplate<CsvRecordBean> {
 
     private static Logger log = LoggerFactory.getLogger(ExecuteTask.class);
 
@@ -54,20 +56,23 @@ public class ExecuteTask extends ExecuteTemplate {
 
     /**
      * ファイルの内容確認チェック。
+     * @param CSVレコード
      * @return 処理結果
      */
     @Override
-    public ExecuteResult validateTarget() {
+    public ExecuteResult validateTarget(CsvRecordBean bean) {
         // TODO Auto-generated method stub
         return new ExecuteResult();
     }
 
     /**
      * DB登録処理。
+     * 
+     * @param CSVレコード
      * @return 処理結果
      */
     @Override
-    public ExecuteResult registerToDB() {
+    public ExecuteResult registerWithDB(CsvRecordBean bean) {
         // TODO Auto-generated method stub
         return new ExecuteResult();
     }
@@ -98,6 +103,15 @@ public class ExecuteTask extends ExecuteTemplate {
     @Override
     public void handleError(ExecuteResult result) {
         new FileMoveErrorHandler(targetFile, result).handle();
+    }
+
+    /**
+     * ファイルDAOを生成し、返却する。
+     * @return ファイルDAOオブジェクト
+     */
+    @Override
+    public FileDataAccessObject<CsvRecordBean> createFileDAO() {
+        return null;
     }
 
 }

@@ -1,4 +1,4 @@
-package xxx.batch.fw.dao;
+package xxx.batch.fw.io;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
